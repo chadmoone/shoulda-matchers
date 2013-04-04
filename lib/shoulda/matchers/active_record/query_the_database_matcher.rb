@@ -1,3 +1,5 @@
+require 'active_support/deprecation'
+
 module Shoulda # :nodoc:
   module Matchers
     module ActiveRecord # :nodoc:
@@ -20,6 +22,7 @@ module Shoulda # :nodoc:
 
       class QueryTheDatabaseMatcher # :nodoc:
         def initialize(times)
+          ActiveSupport::Deprecation.warn 'The query_the_database matcher is deprecated and will be removed in 2.0'
           @queries = []
           @options = {}
 
@@ -67,7 +70,7 @@ module Shoulda # :nodoc:
           end
         end
 
-        def failure_message
+        def failure_message_for_should
           if @options.key?(:expected_query_count)
             "Expected ##{@options[:method_name]} to cause #{@options[:expected_query_count]} database queries but it actually caused #{@queries.length} queries:" + friendly_queries
           else
@@ -75,7 +78,7 @@ module Shoulda # :nodoc:
           end
         end
 
-        def negative_failure_message
+        def failure_message_for_should_not
           if @options[:expected_query_count]
             "Expected ##{@options[:method_name]} to not cause #{@options[:expected_query_count]} database queries but it actually caused #{@queries.length} queries:" + friendly_queries
           else

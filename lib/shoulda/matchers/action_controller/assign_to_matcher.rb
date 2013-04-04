@@ -1,3 +1,5 @@
+require 'active_support/deprecation'
+
 module Shoulda # :nodoc:
   module Matchers
     module ActionController # :nodoc:
@@ -19,9 +21,10 @@ module Shoulda # :nodoc:
       end
 
       class AssignToMatcher # :nodoc:
-        attr_reader :failure_message, :negative_failure_message
+        attr_reader :failure_message_for_should, :failure_message_for_should_not
 
         def initialize(variable)
+          ActiveSupport::Deprecation.warn 'The assign_to matcher is deprecated and will be removed in 2.0'
           @variable    = variable.to_s
           @options = {}
           @options[:check_value] = false
@@ -64,12 +67,12 @@ module Shoulda # :nodoc:
 
         def assigned_value?
           if @controller.instance_variables.map(&:to_s).include?("@#{@variable}")
-            @negative_failure_message =
+            @failure_message_for_should_not =
               "Didn't expect action to assign a value for @#{@variable}, " <<
               "but it was assigned to #{assigned_value.inspect}"
             true
           else
-            @failure_message =
+            @failure_message_for_should =
               "Expected action to assign a value for @#{@variable}"
             false
           end
@@ -78,12 +81,12 @@ module Shoulda # :nodoc:
         def kind_of_expected_class?
           if @options.key?(:expected_class)
             if assigned_value.kind_of?(@options[:expected_class])
-              @negative_failure_message =
+              @failure_message_for_should_not =
                 "Didn't expect action to assign a kind of #{@options[:expected_class]} " <<
                 "for #{@variable}, but got one anyway"
               true
             else
-              @failure_message =
+              @failure_message_for_should =
                 "Expected action to assign a kind of #{@options[:expected_class]} " <<
                 "for #{@variable}, but got #{assigned_value.inspect} " <<
                 "(#{assigned_value.class.name})"
@@ -97,12 +100,12 @@ module Shoulda # :nodoc:
         def equal_to_expected_value?
           if @options[:check_value]
             if @options[:expected_value] == assigned_value
-              @negative_failure_message =
+              @failure_message_for_should_not =
                 "Didn't expect action to assign #{@options[:expected_value].inspect} " <<
                 "for #{@variable}, but got it anyway"
               true
             else
-              @failure_message =
+              @failure_message_for_should =
                 "Expected action to assign #{@options[:expected_value].inspect} " <<
                 "for #{@variable}, but got #{assigned_value.inspect}"
               false

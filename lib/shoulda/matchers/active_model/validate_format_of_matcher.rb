@@ -1,3 +1,5 @@
+require 'active_support/deprecation'
+
 module Shoulda # :nodoc:
   module Matchers
     module ActiveModel # :nodoc:
@@ -27,6 +29,7 @@ module Shoulda # :nodoc:
 
       class ValidateFormatOfMatcher < ValidationMatcher # :nodoc:
         def initialize(attribute)
+          ActiveSupport::Deprecation.warn 'The validate_format_of matcher is deprecated and will be removed in 2.0'
           super
           @options = {}
         end
@@ -78,7 +81,7 @@ module Shoulda # :nodoc:
         end
 
         def description
-          "#{@attribute} have a valid format"
+          "have a valid format for #{@attribute}"
         end
 
         private

@@ -18,13 +18,11 @@ describe Shoulda::Matchers::ActiveModel::OnlyIntegerMatcher do
 
   context 'given an attribute that only allows integer values with a custom validation message' do
     it 'only accepts integer values for that attribute with that message' do
-      only_integer(:message => 'custom').should
-        new_matcher.with_message(/custom/)
+      only_integer(:message => 'custom').should new_matcher.with_message(/custom/)
     end
 
     it 'rejects integer values for that attribute with another message' do
-      only_integer(:message => 'custom').should_not
-        new_matcher.with_message(/wrong/)
+      only_integer(:message => 'custom').should_not new_matcher.with_message(/wrong/)
     end
   end
 
@@ -38,7 +36,7 @@ describe Shoulda::Matchers::ActiveModel::OnlyIntegerMatcher do
 
       matcher.matches?(define_model(:example, :attr => :string).new)
 
-      matcher.failure_message.should include 'Expected errors to include "must be an integer"'
+      matcher.failure_message_for_should.should include 'Expected errors to include "must be an integer"'
     end
   end
 

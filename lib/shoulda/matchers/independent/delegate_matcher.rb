@@ -1,4 +1,5 @@
 require 'bourne'
+require 'active_support/deprecation'
 
 module Shoulda # :nodoc:
   module Matchers
@@ -10,12 +11,15 @@ module Shoulda # :nodoc:
       #   it { should delegate_method(:deliver_mail).to(:mailman) }
       #
       # Options:
-      # * <tt>:as</tt> - tests that the object being delegated to is called with a certain method (defaults to same name as delegating method)
-      # * <tt>:with_arguments</tt> - tests that the method on the object being delegated to is called with certain arguments
+      # * <tt>:as</tt> - tests that the object being delegated to is called with a certain method
+      #   (defaults to same name as delegating method)
+      # * <tt>:with_arguments</tt> - tests that the method on the object being delegated to is
+      #   called with certain arguments
       #
       # Examples:
       #   it { should delegate_method(:deliver_mail).to(:mailman).as(:deliver_with_haste)
-      #   it { should delegate_method(:deliver_mail).to(:mailman).with_arguments('221B Baker St.', :hastily => true)
+      #   it { should delegate_method(:deliver_mail).to(:mailman).
+      #     with_arguments('221B Baker St.', :hastily => true) }
       #
       def delegate_method(delegating_method)
         DelegateMatcher.new(delegating_method)
@@ -23,6 +27,7 @@ module Shoulda # :nodoc:
 
       class DelegateMatcher
         def initialize(delegating_method)
+          ActiveSupport::Deprecation.warn 'The delegate_method matcher is deprecated and will be removed in 2.0'
           @delegating_method = delegating_method
         end
 
@@ -37,10 +42,15 @@ module Shoulda # :nodoc:
             subject.stubs(@target_method).returns(stubbed_object)
             subject.send(@delegating_method)
 
-            stubbed_object.should have_received(method_on_target).with(*@delegated_arguments)
-          rescue NoMethodError, RSpec::Expectations::ExpectationNotMetError, Mocha::ExpectationError
+            matcher = Mocha::API::HaveReceived.new(method_on_target).with(*@delegated_arguments)
+            matcher.matches?(stubbed_object)
+          rescue NoMethodError, Mocha::ExpectationError
             false
           end
+        end
+
+        def description
+          add_clarifications_to("delegate method ##{@delegating_method} to :#{@target_method}")
         end
 
         def does_not_match?(subject)
@@ -62,7 +72,7 @@ module Shoulda # :nodoc:
           self
         end
 
-        def failure_message
+        def failure_message_for_should
           base = "Expected #{delegating_method_name} to delegate to #{target_method_name}"
           add_clarifications_to(base)
         end
@@ -75,7 +85,7 @@ module Shoulda # :nodoc:
           end
 
           if @method_on_target.present?
-            message << " as :#{@method_on_target}"
+            message << " as ##{@method_on_target}"
           end
 
           message

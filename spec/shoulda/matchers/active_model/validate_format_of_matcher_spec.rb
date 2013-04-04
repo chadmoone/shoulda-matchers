@@ -33,46 +33,39 @@ describe Shoulda::Matchers::ActiveModel::ValidateFormatOfMatcher do
     end
   end
 
-  context 'a model without a format validation' do
-    it 'rejects' do
-      define_model(:example, :attr => :string).new.should_not
-        matcher.with('hello')
-    end
-  end
-
   context 'when allow_blank or allow_nil are set' do
     it 'is valid when attr is nil' do
-      validating_format(:with => /abc/, :allow_nil => true).should
-        matcher.with(nil)
+      validating_format(:with => /abc/, :allow_nil => true).
+        should matcher.with(nil)
     end
 
     it 'is valid when attr is blank' do
-      validating_format(:with => /abc/, :allow_blank => true).should
-        matcher.with(' ')
+      validating_format(:with => /abc/, :allow_blank => true).
+        should matcher.with(' ')
     end
   end
 
   context '#allow_blank' do
     it 'accepts when allow_blank matches' do
-      validating_format(:with => /abc/, :allow_blank => true).should
-        matcher.allow_blank
+      validating_format(:with => /abc/, :allow_blank => true).
+        should matcher.allow_blank
     end
 
     it 'rejects when allow_blank does not match' do
-      validating_format(:with => /abc/, :allow_blank => false).should_not
-        matcher.allow_blank
+      validating_format(:with => /abc/, :allow_blank => false).
+        should_not matcher.allow_blank
     end
   end
 
   context '#allow_nil' do
     it 'accepts when allow_nil matches' do
-      validating_format(:with => /abc/, :allow_nil => true).should
-      matcher.allow_nil
+      validating_format(:with => /abc/, :allow_nil => true).
+        should matcher.allow_nil
     end
 
     it 'rejects when allow_nil does not match' do
-      validating_format(:with => /abc/, :allow_nil => false).should_not
-        matcher.allow_nil
+      validating_format(:with => /abc/, :allow_nil => false).
+        should_not matcher.allow_nil
     end
   end
 

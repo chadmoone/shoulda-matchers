@@ -10,6 +10,7 @@ Gem::Specification.new do |s|
   s.email       = "support@thoughtbot.com"
   s.homepage    = "http://thoughtbot.com/community/"
   s.summary     = "Making tests easy on the fingers and eyes"
+  s.license     = "MIT"
   s.description = "Making tests easy on the fingers and eyes"
 
   s.files         = `git ls-files`.split("\n")
@@ -18,7 +19,7 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
 
   s.add_dependency('activesupport', '>= 3.0.0')
-  s.add_dependency('bourne',        '~> 1.2.0')
+  s.add_dependency('bourne', '~> 1.3')
 
   s.add_development_dependency('appraisal',   '~> 0.4')
   s.add_development_dependency('aruba')
@@ -26,5 +27,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency('cucumber',    '~> 1.1')
   s.add_development_dependency('rails',       '~> 3.0')
   s.add_development_dependency('rake',        '>= 0.9.2')
-  s.add_development_dependency('rspec-rails', '~> 2.8.1')
+  s.add_development_dependency('rspec-rails', '~> 2.13')
+  s.add_development_dependency('strong_parameters')
 end

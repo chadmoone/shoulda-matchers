@@ -2,15 +2,14 @@ module Shoulda # :nodoc:
   module Matchers
     module ActiveModel # :nodoc:
       # Ensures that the model is invalid if the given attribute is not unique.
+      # It uses the first existing record or creates a new one if no record
+      # exists in the database. It simply uses `:validate => false` to get
+      # around validations, so it will probably fail if there are `NOT NULL`
+      # constraints. In that case, you must create a record before calling
+      # `validate_uniqueness_of`.
       #
-      # Internally, this uses values from existing records to test validations,
-      # so this will always fail if you have not saved at least one record for
-      # the model being tested, like so:
-      #
-      #   describe User do
-      #     before(:each) { User.create!(:email => 'address@example.com') }
-      #     it { should validate_uniqueness_of(:email) }
-      #   end
+      # Example:
+      #   it { should validate_uniqueness_of(:email) }
       #
       # Options:
       #
@@ -97,7 +96,7 @@ module Shoulda # :nodoc:
                 @subject.send(setter, existing.send(scope))
                 true
               else
-                @failure_message = "#{class_name} doesn't seem to have a #{scope} attribute."
+                @failure_message_for_should = "#{class_name} doesn't seem to have a #{scope} attribute."
                 false
               end
             end
@@ -134,11 +133,11 @@ module Shoulda # :nodoc:
               if allows_value_of(existing_value, @expected_message)
                 @subject.send("#{scope}=", previous_value)
 
-                @negative_failure_message <<
+                @failure_message_for_should_not <<
                   " (with different value of #{scope})"
                 true
               else
-                @failure_message << " (with different value of #{scope})"
+                @failure_message_for_should << " (with different value of #{scope})"
                 false
               end
             end

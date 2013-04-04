@@ -1,4 +1,39 @@
 # HEAD
+
+# v 1.5.6
+* Revert previous change in `AllowValueMatcher` that added a check for a
+properly-set attribute.
+
+# v 1.5.5
+* `AllowValueMatcher` checks that the right value is used for attempts at
+setting the attribute with it
+  * Please note that previously-passing tests might now fail. It is likely that
+  it's not a bug, but please make sure that the code you're testing is written
+  properly before submitting an issue.
+* Use DisallowValueMatcher for `disallows_value_of` method
+* Assert `class_name` value on real class name for `AssociationMatcher`
+* Correct the variable used for `validate_confirmation_of` matcher description
+
+# v 1.5.4
+* Properly-released version of 1.5.3
+
+# v 1.5.3 - yanked due to mis-release
+* Alleviate the need to add `rspec` gem to your app
+
+# v 1.5.1
+* Bump version depedency of Bourne to allow for Mocha upgrade.
+* Should fix incompatiblity with MiniTest.
+
+# v 1.5.0
+* Deprecate the following matchers:
+  * assign_to
+  * respond_with_content_type
+  * query_the_database
+  * validate_format_of
+  * have_sent_email
+  * strong_parameters_matcher
+  * delegate_method
+
 * Use RSpec's native `configure.include` syntax for including matchers into
   RSpec (#204)
 
